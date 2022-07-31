@@ -1,11 +1,13 @@
 ## Overview
-This is the "Quickstart React" example Monday app. 
+
+This is the "Quickstart React" example Monday app.
 <br>It can be used as a board view or dashboard widget, connected to a board and render data from the board using settings.
 
-<br>This app demonstrates how to use: 
-- [settings](https://github.com/mondaycom/monday-sdk-js#mondaygettype-params--) 
-- [context](https://github.com/mondaycom/monday-sdk-js#mondaygettype-params--) 
-- [API](https://github.com/mondaycom/monday-sdk-js#mondayapiquery-options--)
+<br>This app demonstrates how to use:
+
+-   [settings](https://github.com/mondaycom/monday-sdk-js#mondaygettype-params--)
+-   [context](https://github.com/mondaycom/monday-sdk-js#mondaygettype-params--)
+-   [API](https://github.com/mondaycom/monday-sdk-js#mondayapiquery-options--)
 
 <br>You can find more info in our QuickStart guide [here](https://monday.com/developers/apps/quickstart-view/)
 <br /> ![Screenshot](https://dapulse-res.cloudinary.com/image/upload/w_900/v1591485466/remote_mondaycom_static/developers/screenshots/final_view.gif)
@@ -14,16 +16,16 @@ This is the "Quickstart React" example Monday app.
 
 In the project directory, you should run:
 
-### `npm install`
+### `yarn install`
 
 And then to run an application with automatic virtual ngrok tunnel, run:
 
-### `npm start`
+### `yarn start`
 
 Visit http://localhost:4040/status and under "command_line section" find the URL. This is the public URL of your app, so you can use it to test it.
 F.e.: https://021eb6330099.ngrok.io
 
-## Configure Monday App 
+## Configure Monday App
 
 1. Open monday.com, login to your account and go to a "Developers" section.
 2. Create a new "QuickStart View Example App"
@@ -35,9 +37,12 @@ F.e.: https://021eb6330099.ngrok.io
 8. Enjoy the Quickstart View Example app!
 
 ## Release your app
+
 1. Run script
-### `npm run build`
-2. Zip your "./build" folder
+
+### `yarn build`
+
+2. Zip your "./build/dist" folder
 3. Open "Build" tab in your Feature
 4. Click "New Build" button
 5. Click "Upload" radio button and upload zip file with your build

@@ -3,8 +3,8 @@
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
-		"start": "npm run stop && concurrently \"npm run server\" \"npm run expose\"",
-		"build": "tsc",
+		"start": "yarn stop && yarn server",
+		"build": "react-scripts build",
 		"expose": "ngrok http 8301",
 		"server": "react-scripts start",
 		"test": "react-scripts test",
