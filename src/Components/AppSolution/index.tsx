@@ -1,5 +1,4 @@
-import React, { FC, ReactElement, ReactNode, useEffect, useState } from "react";
-import "./App.css";
+import React, { FC, ReactElement, useEffect, useState } from "react";
 import mondaySdk from "monday-sdk-js";
 const monday = mondaySdk();
 
@@ -8,10 +7,10 @@ type AppSolutionProps = { children?: ReactElement | null };
 /**
  * Example of the monday sdk in action.
  */
-export const AppSolution: FC<AppSolutionProps> = (props) => {
+export const AppSolution: FC<AppSolutionProps> = () => {
 	const [settings, setSettings] = useState({});
 	const [context, setContext] = useState({});
-	const [name, setName] = useState({});
+	const [name, setName] = useState(null);
 
 	useEffect(() => {
 		//   // TODO: set up event listeners
@@ -26,8 +25,7 @@ export const AppSolution: FC<AppSolutionProps> = (props) => {
 
 	return (
 		<div>
-			{/* TODO super weird error */}
-			<p>{name as ReactNode}</p>
+			<p>Hi, {name}</p>
 		</div>
 	);
 };
