@@ -1,0 +1,29 @@
+{
+	"name": "server",
+	"version": "0.0.0",
+	"main": "src/index.js",
+	"repository": "https://github.com/zzmarkzz321/dm-af1",
+	"author": "Mark Santiago",
+	"license": "MIT",
+	"private": true,
+	"scripts": {
+		"build": "tsc",
+		"start": "node ./src"
+	},
+	"dependencies": {
+		"body-parser": "^1.20.0",
+		"cors": "^2.8.5",
+		"express": "^4.18.1",
+		"express-jwt": "^7.7.5",
+		"helmet": "^5.1.1",
+		"jwks-rsa": "^2.1.4",
+		"morgan": "^1.10.0"
+	},
+	"devDependencies": {
+		"@tsconfig/node16": "^1.0.3",
+		"@types/cors": "^2.8.12",
+		"@types/helmet": "^4.0.0",
+		"@types/morgan": "^1.9.3",
+		"typescript": "^4.7.4"
+	}
+}

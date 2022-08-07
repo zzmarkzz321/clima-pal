@@ -1,5 +1,3 @@
-# DM-AF1
-
-Monday.com Hackathon project.
+# DM-AF1 Project Monorepo
 
 WIP
