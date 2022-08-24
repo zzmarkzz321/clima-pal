@@ -6,7 +6,7 @@ const MONGODB_URI =
 
 type DBReturn = {
 	load: () => Db | null | undefined;
-	connect: () => void;
+	connect: () => Promise<Db | null | undefined>;
 	getClient: () => MongoClient | null;
 };
 
@@ -31,10 +31,8 @@ const DB: DBReturn = (function () {
 
 			console.info("Attempting to connect to mongodb");
 			try {
-				client = await MongoClient.connect(MONGODB_URI, {
-					serverSelectionTimeoutMS: 60000,
-				});
-				console.info("Connected to MongoDB Instance at %s", url);
+				client = await MongoClient.connect(MONGODB_URI, {});
+				console.info("Connected to MongoDB Instance");
 
 				database = client.db(databaseName);
 
