@@ -3,6 +3,7 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
+import mongo from "./utils/mongo";
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -12,8 +13,11 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use(morgan("combined"));
 
+const db = mongo.load();
+
 app.get("/", (_, res) => {
-	res.send("hello world");
+	const allChallenges = db?.collection("challenges").find({}).toArray();
+	res.send(JSON.stringify(allChallenges, null, 4));
 });
 
 // Records
