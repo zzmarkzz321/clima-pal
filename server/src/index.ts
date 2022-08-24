@@ -5,6 +5,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 
 const app = express();
+const port = process.env.PORT || 3001;
 
 app.use(helmet());
 app.use(bodyParser.json());
@@ -33,6 +34,6 @@ app.post("users", () => {
 	// Creating a user record for new players
 });
 
-app.listen(3001, () => {
-	console.log("listening on port 3001");
+app.listen(port, () => {
+	console.log(`listening on port ${port}`);
 });
