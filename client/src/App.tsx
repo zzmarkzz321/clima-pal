@@ -1,7 +1,7 @@
 import React from "react";
 import "monday-ui-react-core/dist/main.css";
-import { Example } from "./Components";
 import styled from "styled-components";
+import { ChallengeSection } from "./Components/ChallengeSection";
 
 const AppWrapper = styled.div`
 	height: 100vh;
@@ -17,7 +17,7 @@ const AppWrapper = styled.div`
 export default () => {
 	return (
 		<AppWrapper>
-			<Example />
+			<ChallengeSection />
 		</AppWrapper>
 	);
 };

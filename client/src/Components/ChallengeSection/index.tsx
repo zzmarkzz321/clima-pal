@@ -8,6 +8,7 @@ import Emoji from "monday-ui-react-core/dist/icons/Emoji";
 import Completed from "monday-ui-react-core/dist/icons/Completed";
 import mondaySdk from "monday-sdk-js";
 import { useCountdown } from "../../hooks";
+import { useDailyChallenge } from "../../hooks/useDailyChallenge";
 const monday = mondaySdk();
 
 // TODO Implement
@@ -195,19 +196,9 @@ export const ChallengeSection = () => {
 	);
 	const { h, m, s } = useCountdown();
 
-	useEffect(() => {
-		// TODO
-		// Grab users info from monday api and check if they are in the DB
-		// If they aren't create a user record.
-		fetchChallengeData().then((res) => {
-			const { challenge, isCompleted } = res;
-			setCurrentView("Challenge");
-			setChallengeData({
-				challenge,
-				isCompleted,
-			});
-		});
-	}, []);
+	const { dailyChallengeData, error } = useDailyChallenge(() => {
+		return monday.api(`query { me { id } }`);
+	});
 
 	// TODO Implement
 	const markChallengeComplete = () => {

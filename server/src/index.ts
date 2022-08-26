@@ -23,7 +23,7 @@ async function start() {
 		res.send("Hello!");
 	});
 
-	app.get("challenges/daily", async (_, res) => {
+	app.get("/challenges/daily", async (_, res) => {
 		const db = mongo.load();
 		const dailyChallenge = await db?.collection("challenges").findOne({
 			active: true,
@@ -32,7 +32,7 @@ async function start() {
 		res.send({ dailyChallenge });
 	});
 
-	app.put("challenges/:challengeId", async (req, res) => {
+	app.put("/challenges/:challengeId", async (req, res) => {
 		// Once 9am PST (use UTC) hits, update current challenge active field to false and selecting a new challenge by setting active to true
 		// This endpoint does the mutation. Timing can be done via a morning job
 		const { challengeId } = req.params;
@@ -66,13 +66,12 @@ async function start() {
 	app.post(
 		"/accomplishments/challenge/:challengeId/user/:userId",
 		async (req, res) => {
-			// Creating an accomplishment record for a user
 			const { challengeId, userId } = req.params;
 
 			const db = mongo.load();
 			await db?.collection("accomplishments").insertOne({
-				challengeId,
-				userId,
+				challengeId: new ObjectId(challengeId),
+				userId: new ObjectId(userId),
 				completedOn: new Date(),
 				...generateDefaultDocFields(),
 			});
@@ -81,8 +80,47 @@ async function start() {
 		}
 	);
 
-	app.post("users", async (req, res) => {
-		// Creating a user record for new players
+	app.get(
+		"/accomplishments/challenge/:challengeId/user/:userId",
+		async (req, res) => {
+			const { challengeId, userId } = req.params;
+
+			const db = mongo.load();
+			const accomplishment = await db
+				?.collection("accomplishments")
+				.findOne({
+					challengeId: new ObjectId(challengeId),
+					userId: new ObjectId(userId),
+				});
+
+			res.send({ accomplishment });
+		}
+	);
+
+	app.get("/accomplishments/user/:userId/total", async (req, res) => {
+		const { userId } = req.params;
+		const db = mongo.load();
+		const totalAccomplishments = await db
+			?.collection("accomplishment")
+			.count({
+				userId: new ObjectId(userId),
+			});
+
+		res.send({ totalAccomplishments });
+	});
+
+	app.get("/users", async (req, res) => {
+		const { mondayUserId } = req.body;
+
+		const db = mongo.load();
+		const user = await db?.collection("users").findOne({
+			mondayUserId,
+		});
+
+		res.send({ user });
+	});
+
+	app.post("/users", async (req, res) => {
 		const { mondayUserId } = req.body;
 
 		const db = mongo.load();
@@ -91,7 +129,11 @@ async function start() {
 			...generateDefaultDocFields(),
 		});
 
-		res.sendStatus(200);
+		const newUser = await db?.collection("users").findOne({
+			mondayUserId,
+		});
+
+		res.send({ newUserId: newUser?._id });
 	});
 
 	app.listen(port, () => {

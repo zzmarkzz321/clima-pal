@@ -10,22 +10,60 @@ import { SERVER_URL } from "../constants";
  * 1. The daily challenge
  * 2. Did the user complete the challenge? Fetch accomplishments by mondayUserId
  */
-export const useDailyChallenge = () => {
-	const [dailyChallege, setDailyChallenge] = useState(null);
-	const [error, setError] = useState(null);
+export const useDailyChallenge = (
+	queryMondayUserId: () => Promise<{ data: object }>
+) => {
+	const [dailyChallengeData, setDailyChallengeData] = useState<{
+		challenge: string;
+		isCompleted: boolean;
+	} | null>(null);
+	const [error, setError] = useState<any>(null);
 
 	async function fetchDailyChallenge() {
+		// fetch user info
+		let { user } = (await axios.get(`${SERVER_URL}/users`)).data;
+
+		// If the user doesn't exist, create one.
+		if (!user) {
+			const mondayUserId = ((await queryMondayUserId())?.data as any)?.me
+				?.id;
+
+			if (!mondayUserId) {
+				setError("unable to fetch mondayUserId");
+				// Return early and display an error saying something broke
+				return Promise.resolve({});
+			}
+
+			user = await axios({
+				method: "POST",
+				url: `${SERVER_URL}/users`,
+				data: {
+					mondayUserId,
+				},
+			});
+		}
+
 		const { dailyChallenge } = (
 			await axios.get(`${SERVER_URL}/challenges/daily`)
 		).data;
-		setDailyChallenge(dailyChallenge);
+
+		const { accomplishment } = (
+			await axios.get(
+				`${SERVER_URL}/accomplishments/challenge/${dailyChallenge._id}/user/${user._id}`
+			)
+		).data;
+
+		setDailyChallengeData({
+			challenge: dailyChallenge.name,
+			isCompleted: Boolean(accomplishment),
+		});
 	}
 
 	useEffect(() => {
 		fetchDailyChallenge().catch((error) => {
 			setError(error);
 		});
-	});
+	}, []);
 
-	return { error, dailyChallege };
+	return { error, dailyChallengeData };
 };
