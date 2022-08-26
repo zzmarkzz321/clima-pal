@@ -1,18 +1,11 @@
 require("dotenv").config();
-
 import { Db, MongoClient } from "mongodb";
+
 const MONGODB_URI =
 	process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/dm-af1";
 
-type DBReturn = {
-	load: () => Db | null | undefined;
-	connect: () => Promise<Db | null | undefined>;
-	getClient: () => MongoClient | null;
-};
-
-const DB: DBReturn = (function () {
+const DB = (function () {
 	const databaseName = process.env.MONGODB_URI ? "Prod" : "Dev";
-	const url: string = MONGODB_URI;
 	let database: Db | null = null;
 	let client: MongoClient | null = null;
 
