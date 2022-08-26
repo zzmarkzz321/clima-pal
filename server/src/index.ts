@@ -109,8 +109,8 @@ async function start() {
 		res.send({ totalAccomplishments });
 	});
 
-	app.get("/users", async (req, res) => {
-		const { mondayUserId } = req.body;
+	app.get("/users/monday-user-id/:mondayUserId", async (req, res) => {
+		const { mondayUserId } = req.params;
 
 		const db = mongo.load();
 		const user = await db?.collection("users").findOne({
@@ -133,7 +133,7 @@ async function start() {
 			mondayUserId,
 		});
 
-		res.send({ newUserId: newUser?._id });
+		res.send({ user: newUser });
 	});
 
 	app.listen(port, () => {

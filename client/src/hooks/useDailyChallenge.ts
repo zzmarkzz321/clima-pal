@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { SERVER_URL } from "../constants";
 
 /**
- * Before fetching any data, check if the user exists through /users/:mondayUserId
+ * Before fetching any data, check if the user exists through GET /users
  * If none exist, create one (done in the same service in the api)
  *
  * (Combine into one endpoint - /users/:mondayUserId/challenge): The initial fetch we do for challenge data should be composed of:
@@ -20,27 +20,31 @@ export const useDailyChallenge = (
 	const [error, setError] = useState<any>(null);
 
 	async function fetchDailyChallenge() {
-		// fetch user info
-		let { user } = (await axios.get(`${SERVER_URL}/users`)).data;
+		const mondayUserId = ((await queryMondayUserId())?.data as any)?.me?.id;
 
-		// If the user doesn't exist, create one.
+		if (!mondayUserId) {
+			setError("unable to fetch mondayUserId");
+			// Return early and display an error saying something broke
+			return Promise.resolve({});
+		}
+
+		let { user } = (
+			await axios.get(
+				`${SERVER_URL}/users/monday-user-id/${mondayUserId}`
+			)
+		).data;
+
+		// If the user doesn't exist in our system, create one.
 		if (!user) {
-			const mondayUserId = ((await queryMondayUserId())?.data as any)?.me
-				?.id;
-
-			if (!mondayUserId) {
-				setError("unable to fetch mondayUserId");
-				// Return early and display an error saying something broke
-				return Promise.resolve({});
-			}
-
-			user = await axios({
-				method: "POST",
-				url: `${SERVER_URL}/users`,
-				data: {
-					mondayUserId,
-				},
-			});
+			user = (
+				await axios({
+					method: "POST",
+					url: `${SERVER_URL}/users`,
+					data: {
+						mondayUserId,
+					},
+				})
+			).data.user;
 		}
 
 		const { dailyChallenge } = (

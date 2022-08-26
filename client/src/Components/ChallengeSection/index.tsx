@@ -11,14 +11,6 @@ import { useCountdown } from "../../hooks";
 import { useDailyChallenge } from "../../hooks/useDailyChallenge";
 const monday = mondaySdk();
 
-// TODO Implement
-const fetchChallengeData = () => {
-	return Promise.resolve({
-		challenge: "Walk 5000 steps",
-		isCompleted: false,
-	});
-};
-
 const Group = styled.div`
 	display: flex;
 	justify-content: space-between;
@@ -86,20 +78,7 @@ const ChallengeView: FC<ChallengeViewProps> = ({
 
 type UserViewProps = {};
 
-const userAccomplishments = [
-	{
-		badge: (
-			<span aria-label="a rocket blasting off" role="img">
-				&#128512;
-			</span>
-		),
-		challenge: {
-			_id: "some-od",
-			name: "Walk 5000 steps",
-			completedOn: new Date(),
-		},
-	},
-];
+const userAccomplishmentsTotal = 1;
 
 const UserView: FC<UserViewProps> = () => {
 	const [loading, setLoading] = useState(true);
@@ -107,7 +86,7 @@ const UserView: FC<UserViewProps> = () => {
 
 	useEffect(() => {
 		// TODO
-		// Grab accomplishments from user record
+		// Grab accomplishments TOTAL from user record
 		monday
 			.api(`query { me { name } }`)
 			.then((res) => {
@@ -164,15 +143,7 @@ const UserView: FC<UserViewProps> = () => {
 	return (
 		<>
 			<p>{`Hey, ${name}. Complete challenges to collect badges!`}</p>
-			<p>Total Challenges Completed: {userAccomplishments.length}</p>
-			<Divider />
-			<ul>
-				{userAccomplishments.map(({ badge, challenge }, key) => (
-					<li
-						key={`user-${key}`}
-					>{`${challenge.name} - ${challenge.completedOn}`}</li>
-				))}
-			</ul>
+			<p>Total Challenges Completed: {userAccomplishmentsTotal}</p>
 		</>
 	);
 };
