@@ -48,7 +48,9 @@ export const ChallengeView: FC<ChallengeViewProps> = ({
 					<CompletedHeader>{challenge}</CompletedHeader>
 				</Flex>
 			) : (
-				<h3>{challenge}</h3>
+				<h3 style={{ textAlign: "center", marginTop: "50px" }}>
+					{challenge}
+				</h3>
 			)}
 
 			<Button
