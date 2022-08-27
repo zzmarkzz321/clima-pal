@@ -114,7 +114,7 @@ async function start() {
 
 		const db = mongo.load();
 		const user = await db?.collection("users").findOne({
-			mondayUserId,
+			mondayUserId: Number(mondayUserId),
 		});
 
 		res.send({ user });
