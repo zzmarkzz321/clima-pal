@@ -1,22 +1,23 @@
 import { useState, useEffect } from "react";
 
+const RESET_HOUR = 9;
+
 // TODO This should calcualte time until 9:00 am the next day
-export const useCountdown = () => {
-	const [h, setH] = useState(23);
-	const [m, setM] = useState(59);
-	const [s, setS] = useState(59);
+export const useDailyChallengeCountdown = () => {
+	const currentDate = new Date();
+	const [h, setH] = useState(RESET_HOUR - 1 - currentDate.getHours());
+	const [m, setM] = useState(59 - currentDate.getMinutes());
+	const [s, setS] = useState(59 - currentDate.getSeconds());
 
 	useEffect(() => {
 		const timer = window.setInterval(() => {
-			if (s === 1) {
+			if (s === 1 && m !== 0 && h !== 0) {
 				setS(59);
 
-				if (m === 1) {
+				if (m === 1 && h !== 0) {
 					setM(59);
 
-					if (h === 0) {
-						setH(23);
-					} else {
+					if (h !== 0) {
 						setH(h - 1);
 					}
 				} else {

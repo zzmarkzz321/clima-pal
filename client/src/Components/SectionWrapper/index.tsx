@@ -1,5 +1,4 @@
 import React, { ReactNode } from "react";
-import { Box } from "monday-ui-react-core";
 import styled from "styled-components";
 
 type SectionWrapperProps = {
@@ -7,20 +6,26 @@ type SectionWrapperProps = {
 };
 
 const ContentWrapper = styled.div`
-	max-width: 600px;
+	width: 600px;
 `;
 
-const Content = styled.div``;
+const Content = styled.div`
+	height: 250px;
+`;
+
+const Box = styled.div`
+	background-color: #1c1824;
+	border: solid 1px black;
+	border-radius: 5px;
+	padding: 10px;
+
+	color: white;
+`;
 
 export const SectionWrapper = ({ children }: SectionWrapperProps) => {
 	return (
 		<ContentWrapper>
-			<Box
-				border={Box.borders.DEFAULT}
-				rounded={Box.roundeds.SMALL}
-				padding={Box.paddings.SMALL}
-				backgroundColor={Box.backgroundColors.PRIMARY_BACKGROUND_COLOR}
-			>
+			<Box>
 				<Content>{children}</Content>
 			</Box>
 		</ContentWrapper>

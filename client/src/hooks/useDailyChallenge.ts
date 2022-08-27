@@ -2,6 +2,11 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { SERVER_URL } from "../constants";
 
+export type ChallengeData = {
+	challenge: string;
+	isCompleted: boolean;
+} | null;
+
 /**
  * Before fetching any data, check if the user exists through GET /users
  * If none exist, create one (done in the same service in the api)
@@ -11,19 +16,17 @@ import { SERVER_URL } from "../constants";
  * 2. Did the user complete the challenge? Fetch accomplishments by mondayUserId
  */
 export const useDailyChallenge = (
-	queryMondayUserId: () => Promise<{ data: object }>
+	queryMondayUserId: () => Promise<{ data: object }>,
+	onCompleteFetch: VoidFunction,
+	onError: VoidFunction
 ) => {
-	const [dailyChallengeData, setDailyChallengeData] = useState<{
-		challenge: string;
-		isCompleted: boolean;
-	} | null>(null);
-	const [error, setError] = useState<any>(null);
-
+	const [dailyChallengeData, setDailyChallengeData] =
+		useState<ChallengeData>(null);
 	async function fetchDailyChallenge() {
 		const mondayUserId = ((await queryMondayUserId())?.data as any)?.me?.id;
 
 		if (!mondayUserId) {
-			setError("unable to fetch mondayUserId");
+			onError();
 			// Return early and display an error saying something broke
 			return Promise.resolve({});
 		}
@@ -33,6 +36,8 @@ export const useDailyChallenge = (
 				`${SERVER_URL}/users/monday-user-id/${mondayUserId}`
 			)
 		).data;
+
+		console.log("getuser", { user });
 
 		// If the user doesn't exist in our system, create one.
 		if (!user) {
@@ -64,10 +69,13 @@ export const useDailyChallenge = (
 	}
 
 	useEffect(() => {
-		fetchDailyChallenge().catch((error) => {
-			setError(error);
-		});
+		fetchDailyChallenge()
+			.then(onCompleteFetch)
+			// TODO We should log these errors
+			.catch(onError);
+		// Dependencies are expected to remain stable and we only want this invoked on mount.
+		// eslint-disable-next-line
 	}, []);
 
-	return { error, dailyChallengeData };
+	return { dailyChallengeData };
 };
