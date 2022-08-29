@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from "react";
-import { Skeleton } from "monday-ui-react-core";
+import { Spinner } from "../../../Components";
 import mondaySdk from "monday-sdk-js";
 
 type UserViewProps = {
@@ -20,9 +20,7 @@ export const UserView: FC<UserViewProps> = ({ monday }) => {
 			.api(`query { me { name } }`)
 			.then((res) => {
 				setName((res?.data as any)?.me?.name);
-				setTimeout(() => {
-					setLoading(false);
-				}, 500);
+				setLoading(false);
 			})
 			.catch((e) => {
 				console.log(e);
@@ -31,52 +29,7 @@ export const UserView: FC<UserViewProps> = ({ monday }) => {
 	}, []);
 
 	if (loading) {
-		return (
-			<div>
-				<div style={{ marginTop: "20px" }}>
-					<Skeleton
-						type={Skeleton.types.TEXT}
-						size={Skeleton.sizes.TEXT.MEDIUM}
-						width={500}
-					/>
-				</div>
-				<div style={{ marginTop: "30px" }}>
-					<Skeleton
-						type={Skeleton.types.TEXT}
-						size={Skeleton.sizes.TEXT.MEDIUM}
-						width={500}
-					/>
-				</div>
-				<div style={{ marginTop: "30px" }}>
-					<Skeleton
-						type={Skeleton.types.TEXT}
-						size={Skeleton.sizes.TEXT.MEDIUM}
-						width={500}
-					/>
-				</div>
-
-				{/* <div style={{ marginTop: "10px" }}>
-					<div style={{ marginTop: "10px" }}>
-						<Skeleton
-							type={Skeleton.types.TEXT}
-							size={Skeleton.sizes.TEXT.MEDIUM}
-						/>
-					</div>
-					<div style={{ marginTop: "10px" }}>
-						<Skeleton
-							type={Skeleton.types.TEXT}
-							size={Skeleton.sizes.TEXT.MEDIUM}
-						/>
-					</div>
-					<div style={{ marginTop: "10px" }}>
-						<Skeleton
-							type={Skeleton.types.TEXT}
-							size={Skeleton.sizes.TEXT.MEDIUM}
-						/>
-					</div>
-				</div> */}
-			</div>
-		);
+		return <Spinner />;
 	}
 
 	return (

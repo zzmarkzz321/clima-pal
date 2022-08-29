@@ -1,16 +1,24 @@
 import React, { FC, useState } from "react";
 import styled from "styled-components";
-import { Button, Flex } from "monday-ui-react-core";
-import Completed from "monday-ui-react-core/dist/icons/Completed";
+import { Button } from "monday-ui-react-core";
+import ConfettiGenerator from "confetti-js";
+import axios from "axios";
 
-const CompletedHeader = styled.h2`
+import { SERVER_URL } from "../../../constants";
+
+const CompletedHeader = styled.h3`
 	text-decoration: line-through;
 	color: green;
+	text-align: center;
+	margin-top: 50px;
 `;
 
 type ChallengeViewProps = {
 	isCompleted: boolean | null | undefined;
 	challenge: string | null | undefined;
+	userId: string | undefined;
+	challengeId: string | undefined;
+	onCompleteChallenge: VoidFunction;
 };
 
 const ChallengeViewContentWrapper = styled.div`
@@ -24,34 +32,52 @@ const ChallengeViewContentWrapper = styled.div`
 export const ChallengeView: FC<ChallengeViewProps> = ({
 	isCompleted,
 	challenge,
+	userId,
+	challengeId,
+	onCompleteChallenge,
 }) => {
-	// TODO need to manage challengeData state in the root to avoid extra HTTP calls
 	const [loading, setLoading] = useState(false);
 	const [localCompleteState, setLocalCompleteState] = useState(false);
 
-	// TODO implement
 	const completeChallenge = () => {
 		setLoading(true);
+		const confetti = new ConfettiGenerator({
+			width: "600",
+			height: "250",
+			start_from_edge: true,
+		});
 		new Promise((resolve) => setTimeout(resolve, 1000))
-			// .then(onCompleteChallenge)
 			.then(() => {
+				return axios.post(
+					`${SERVER_URL}/accomplishments/challenge/${challengeId}/user/${userId}`
+				);
+			})
+			.then(() => {
+				confetti.render();
 				setLoading(false);
 				setLocalCompleteState(true);
+				// Give time for celebration animation before display completed UI
+				return new Promise((resolve) => setTimeout(resolve, 3000));
+			})
+			.then(() => {
+				onCompleteChallenge();
+				confetti.clear();
 			});
 	};
 
+	if (isCompleted) {
+		return (
+			<ChallengeViewContentWrapper>
+				<CompletedHeader>{challenge}</CompletedHeader>
+			</ChallengeViewContentWrapper>
+		);
+	}
+
 	return (
 		<ChallengeViewContentWrapper>
-			{isCompleted ? (
-				<Flex gap={Flex.gaps.MEDIUM}>
-					<Completed color={"green"} />
-					<CompletedHeader>{challenge}</CompletedHeader>
-				</Flex>
-			) : (
-				<h3 style={{ textAlign: "center", marginTop: "50px" }}>
-					{challenge}
-				</h3>
-			)}
+			<h3 style={{ textAlign: "center", marginTop: "50px" }}>
+				{challenge}
+			</h3>
 
 			<Button
 				loading={loading}

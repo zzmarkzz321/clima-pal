@@ -6,9 +6,9 @@ import LearnMore from "monday-ui-react-core/dist/icons/LearnMore";
 import Emoji from "monday-ui-react-core/dist/icons/Emoji";
 import mondaySdk from "monday-sdk-js";
 
-import { SectionWrapper } from "../SectionWrapper";
+import { Countdown } from "../Countdown";
+import { SectionWrapper } from "../../Components";
 
-import { useDailyChallengeCountdown } from "../../hooks";
 import { useDailyChallenge } from "../../hooks/useDailyChallenge";
 
 import { LoadingView } from "./LoadingView";
@@ -36,8 +36,7 @@ const NavIcons = styled.span`
 
 export const ChallengeSection = () => {
 	const [currentView, setCurrentView] = useState<ViewOptions>("Loading");
-	const { h, m, s } = useDailyChallengeCountdown();
-	const { dailyChallengeData } = useDailyChallenge(
+	const { dailyChallengeData, onCompleteChallenge } = useDailyChallenge(
 		() => {
 			return monday.api(`query { me { id } }`);
 		},
@@ -54,6 +53,9 @@ export const ChallengeSection = () => {
 					<ChallengeView
 						isCompleted={dailyChallengeData?.isCompleted}
 						challenge={dailyChallengeData?.challenge}
+						userId={dailyChallengeData?.userId}
+						challengeId={dailyChallengeData?._id}
+						onCompleteChallenge={onCompleteChallenge}
 					/>
 				);
 			case "User":
@@ -71,11 +73,7 @@ export const ChallengeSection = () => {
 		<>
 			<SectionWrapper>
 				<Group>
-					<p style={{ color: "#51994c" }}>
-						Challenge resets in{" "}
-						{`${h} hours ${m} minutes and ${s} seconds`}
-					</p>
-
+					<Countdown />
 					<IconGroup>
 						<NavIcons>
 							<Emoji

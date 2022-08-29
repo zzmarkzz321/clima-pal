@@ -1,7 +1,7 @@
 import React from "react";
 import "monday-ui-react-core/dist/main.css";
 import styled from "styled-components";
-import { ChallengeSection } from "./Components/ChallengeSection";
+import { ChallengeSection } from "./Components";
 
 const AppWrapper = styled.div`
 	height: 100vh;
@@ -14,10 +14,16 @@ const AppWrapper = styled.div`
 	font-family: "Roboto", sans-serif;
 `;
 
+const Canvas = styled.canvas`
+	position: absolute;
+	pointer-events: none;
+`;
+
 export default () => {
 	return (
 		<AppWrapper>
 			<ChallengeSection />
+			<Canvas id="confetti-holder" />
 		</AppWrapper>
 	);
 };

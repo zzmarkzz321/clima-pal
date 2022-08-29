@@ -3,17 +3,15 @@ import { useState, useEffect } from "react";
 import { SERVER_URL } from "../constants";
 
 export type ChallengeData = {
+	_id: string;
 	challenge: string;
+	userId: string;
 	isCompleted: boolean;
 } | null;
 
 /**
- * Before fetching any data, check if the user exists through GET /users
- * If none exist, create one (done in the same service in the api)
- *
- * (Combine into one endpoint - /users/:mondayUserId/challenge): The initial fetch we do for challenge data should be composed of:
- * 1. The daily challenge
- * 2. Did the user complete the challenge? Fetch accomplishments by mondayUserId
+ * Powers the fetching of all data for the application and state management
+ * for the challenge.
  */
 export const useDailyChallenge = (
 	queryMondayUserId: () => Promise<{ data: object }>,
@@ -22,6 +20,20 @@ export const useDailyChallenge = (
 ) => {
 	const [dailyChallengeData, setDailyChallengeData] =
 		useState<ChallengeData>(null);
+
+	// Provide consumers a way to update isCompleted to prevent additional calls.
+	// Due to the simplicity of the app, we don't need to worry about the app getting into a stale state
+	// For more complex features that get added on, this will need to chage.
+	function onCompleteChallenge() {
+		setDailyChallengeData(
+			(prev) =>
+				({
+					...prev,
+					isCompleted: true,
+				} as ChallengeData)
+		);
+	}
+
 	async function fetchDailyChallenge() {
 		const mondayUserId = ((await queryMondayUserId())?.data as any)?.me?.id;
 
@@ -36,8 +48,6 @@ export const useDailyChallenge = (
 				`${SERVER_URL}/users/monday-user-id/${mondayUserId}`
 			)
 		).data;
-
-		console.log("getuser", { user });
 
 		// If the user doesn't exist in our system, create one.
 		if (!user) {
@@ -63,7 +73,9 @@ export const useDailyChallenge = (
 		).data;
 
 		setDailyChallengeData({
+			_id: dailyChallenge._id,
 			challenge: dailyChallenge.name,
+			userId: user._id,
 			isCompleted: Boolean(accomplishment),
 		});
 	}
@@ -77,5 +89,5 @@ export const useDailyChallenge = (
 		// eslint-disable-next-line
 	}, []);
 
-	return { dailyChallengeData };
+	return { dailyChallengeData, onCompleteChallenge };
 };
