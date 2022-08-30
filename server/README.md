@@ -1,4 +1,4 @@
-# DM-AF1 server
+# Clima-pal server
 
 WIP
 
