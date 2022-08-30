@@ -1,3 +1,3 @@
-# DM-AF1 client
+# Clima-pal client
 
 WIP
