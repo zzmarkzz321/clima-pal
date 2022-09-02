@@ -1,3 +1,3 @@
-# DM-AF1 Project Monorepo
+# Clima-pal Project Monorepo
 
 WIP
