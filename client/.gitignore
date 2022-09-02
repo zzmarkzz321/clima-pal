@@ -3,3 +3,4 @@ build
 build.zip
 yarn-error.log
 .DS_Store
+data

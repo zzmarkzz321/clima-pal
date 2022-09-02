@@ -60,7 +60,12 @@ export const ChallengeSection = () => {
 				);
 			case "User":
 				// Limitation with ReturnType for overloaded functions
-				return <UserView monday={monday as any} />;
+				return (
+					<UserView
+						monday={monday as any}
+						userId={dailyChallengeData?.userId}
+					/>
+				);
 			case "FAQ":
 				return <FAQView />;
 			case "Error":
